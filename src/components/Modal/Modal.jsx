@@ -1,4 +1,3 @@
-import React from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay, MainModal } from './Modal.styled';
@@ -6,20 +5,6 @@ import { Overlay, MainModal } from './Modal.styled';
 const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ closeModal, largeImage }) => {
-
-  const handleKeyDown = (e) => {
-    if (e.code === 'Escape') {
-      closeModal();
-    }
-  }
-
-  React.useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [closeModal]);
-
   return createPortal(
     <Overlay
       onClick={() => {
@@ -34,7 +19,7 @@ export const Modal = ({ closeModal, largeImage }) => {
   );
 };
 
-Modal.propTypes = {
+Modal.prototype = {
   closeModal: PropTypes.func.isRequired,
   largeImage: PropTypes.string.isRequired,
 };
