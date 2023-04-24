@@ -8,3 +8,4 @@ export const ButtonMore = ({ loadMore }) => {
 ButtonMore.prototype = {
   loadMore: PropTypes.func.isRequired,
 };
+//
