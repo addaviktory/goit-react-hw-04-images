@@ -1,54 +1,46 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { BsSearch } from 'react-icons/bs';
 import {
-  HeaderSearchbar,
-  SearchForm,
-  SearchFormButton,
-  SearchFormButtonLabel,
-  SearchFormInput,
+HeaderSearchbar,
+SearchForm,
+SearchFormButton,
+SearchFormButtonLabel,
+SearchFormInput,
 } from './Searchbar.styled';
 
-export class Searchbar extends Component {
-  state = {
-    request: '',
-  };
+export function Searchbar({ onSubmit }) {
+const [request, setRequest] = useState('');
 
-  setSearchValue = e => {
-    this.setState({ request: e.target.value });
-  };
+const handleSubmit = (e) => {
+e.preventDefault();
+onSubmit(request);
+};
 
-  submit(e) {
-    e.preventDefault();
-    this.props.onSubmit(this.state.request);
-  }
+const setSearchValue = (e) => {
+setRequest(e.target.value);
+};
 
-  render() {
-    return (
-      <HeaderSearchbar>
-        <SearchForm
-          onSubmit={e => {
-            this.submit(e);
-          }}
-        >
-          <SearchFormButton type="submit">
-            <BsSearch className="search-icon" />
-            <SearchFormButtonLabel>Search</SearchFormButtonLabel>
-          </SearchFormButton>
-          <SearchFormInput
-            className="input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.setSearchValue}
-          />
-        </SearchForm>
-      </HeaderSearchbar>
-    );
-  }
+return (
+<HeaderSearchbar>
+<SearchForm onSubmit={handleSubmit}>
+<SearchFormButton type="submit">
+<BsSearch className="search-icon" />
+<SearchFormButtonLabel>Search</SearchFormButtonLabel>
+</SearchFormButton>
+<SearchFormInput
+       className="input"
+       type="text"
+       autoComplete="off"
+       autoFocus
+       placeholder="Search images and photos"
+       onChange={setSearchValue}
+     />
+</SearchForm>
+</HeaderSearchbar>
+);
 }
 
 Searchbar.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+onSubmit: PropTypes.func.isRequired,
 };

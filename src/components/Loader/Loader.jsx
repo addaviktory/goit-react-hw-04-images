@@ -5,7 +5,7 @@ export const Loader = ({ size }) => {
   return <Oval visible={true} height={size} width={size} />;
 };
 
-Loader.prototype = {
+Loader.propTypes = {
   size: PropTypes.number.isRequired,
 };
 

@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { ImageGalleryUl, ImageGalleryItemLi, ImageGalleryItemImage } from './ImageGallery.styled';
+import {
+  ImageGalleryUl,
+  ImageGalleryItemLi,
+  ImageGalleryItemImage,
+} from './ImageGallery.styled';
 import { Loader } from '../Loader/Loader';
 
-export const ImageGallery = ({ hits, openModal }) => {
+const ImageGallery = ({ hits, openModal }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentImage, setCurrentImage] = useState('');
 
-  const handleImageClick = (largeImageURL) => {
+  useEffect(() => {
+    const handleImageLoaded = () => {
+      setIsLoading(false);
+    };
+    if (currentImage) {
+      setIsLoading(true);
+      const image = new Image();
+      image.src = currentImage;
+      image.addEventListener('load', handleImageLoaded);
+      return () => image.removeEventListener('load', handleImageLoaded);
+    }
+  }, [currentImage]);
+
+  const handleImageClick = largeImageURL => {
     setIsLoading(true);
     setCurrentImage(largeImageURL);
-    openModal(largeImageURL)
-  };
-
-  const handleImageLoaded = () => {
-    setIsLoading(false);
+    openModal(largeImageURL);
   };
 
   return (
@@ -23,8 +36,11 @@ export const ImageGallery = ({ hits, openModal }) => {
         {hits &&
           hits.map(({ id, webformatURL, largeImageURL }) => {
             return (
-              <ImageGalleryItemLi key={id} onClick={() => handleImageClick(largeImageURL)}>
-                <ImageGalleryItemImage src={webformatURL} alt={id} onLoad={handleImageLoaded} />
+              <ImageGalleryItemLi
+                key={id}
+                onClick={() => handleImageClick(largeImageURL)}
+              >
+                <ImageGalleryItemImage src={webformatURL} alt={id} />
               </ImageGalleryItemLi>
             );
           })}
@@ -35,12 +51,7 @@ export const ImageGallery = ({ hits, openModal }) => {
         </div>
       )}
       {currentImage && (
-        <img
-          src={currentImage}
-          alt="large"
-          onLoad={() => setIsLoading(false)}
-          style={{ display: 'none' }}
-        />
+        <img src={currentImage} alt="large" style={{ display: 'none' }} />
       )}
     </>
   );
@@ -50,3 +61,5 @@ ImageGallery.propTypes = {
   hits: PropTypes.array.isRequired,
   openModal: PropTypes.func.isRequired,
 };
+
+export default ImageGallery;
